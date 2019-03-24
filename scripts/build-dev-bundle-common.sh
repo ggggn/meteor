@@ -2,12 +2,13 @@
 
 set -e
 set -u
+set -x
 
 UNAME=$(uname)
 ARCH=$(uname -m)
 NODE_VERSION=8.11.4
 MONGO_VERSION_64BIT=4.0.2
-MONGO_VERSION_32BIT=3.2.19
+MONGO_VERSION_32BIT=2.4.14
 NPM_VERSION=6.4.1
 
 # If we built Node from source on Jenkins, this is the build number.
@@ -17,7 +18,7 @@ if [ "$UNAME" == "Linux" ] ; then
     if [ "$ARCH" != "i686" -a "$ARCH" != "x86_64" ] ; then
         echo "Unsupported architecture: $ARCH"
         echo "Meteor only supports i686 and x86_64 for now."
-        exit 1
+        #exit 1
     fi
 
     OS="linux"
@@ -63,6 +64,9 @@ then
     elif [ "$ARCH" == "x86_64" ]
     then
         NODE_TGZ="node-v${NODE_VERSION}-linux-x64.tar.gz"
+    elif [ "$ARCH" == "armv7l" ]
+    then
+        NODE_TGZ="node-v${NODE_VERSION}-linux-armv7l.tar.gz"
     else
         echo "Unknown architecture: $UNAME $ARCH"
         exit 1
@@ -80,7 +84,7 @@ cd "$SCRIPTS_DIR/.."
 CHECKOUT_DIR=$(pwd)
 
 DIR=$(mktemp -d -t generate-dev-bundle-XXXXXXXX)
-trap 'rm -rf "$DIR" >/dev/null 2>&1' 0
+#trap 'rm -rf "$DIR" >/dev/null 2>&1' 0
 
 cd "$DIR"
 chmod 755 .

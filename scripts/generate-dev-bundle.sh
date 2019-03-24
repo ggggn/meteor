@@ -68,19 +68,24 @@ fi
 if [ $ARCH = "i686" ]; then
   MONGO_VERSION=$MONGO_VERSION_32BIT
 fi
+if [ $ARCH = "armv7l" ]; then
+  MONGO_VERSION=$MONGO_VERSION_32BIT
+fi
 
 MONGO_NAME="mongodb-${OS}-${ARCH}-${MONGO_VERSION}"
 MONGO_NAME_SSL="mongodb-${OS}${MONGO_SSL}-${ARCH}-${MONGO_VERSION}"
 MONGO_TGZ="${MONGO_NAME_SSL}.tgz"
 MONGO_URL="http://fastdl.mongodb.org/${OS}/${MONGO_TGZ}"
 echo "Downloading Mongo from ${MONGO_URL}"
-curl "${MONGO_URL}" | tar zx
+#curl "${MONGO_URL}" | tar zx
 
 # Put Mongo binaries in the right spot (mongodb/bin)
 mkdir -p "mongodb/bin"
-mv "${MONGO_NAME}/bin/mongod" "mongodb/bin"
-mv "${MONGO_NAME}/bin/mongo" "mongodb/bin"
-rm -rf "${MONGO_NAME}"
+#mv "${MONGO_NAME}/bin/mongod" "mongodb/bin"
+#mv "${MONGO_NAME}/bin/mongo" "mongodb/bin"
+cp "/usr/bin/mongod" "mongodb/bin"
+cp "/usr/bin/mongo" "mongodb/bin"
+#rm -rf "${MONGO_NAME}"
 
 # export path so we use the downloaded node and npm
 export PATH="$DIR/bin:$PATH"
